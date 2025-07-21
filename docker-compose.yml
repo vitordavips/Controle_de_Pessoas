@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+        MYSQL_ROOT_PASWORD: root123
+        MYSQL_DATABASE: efetivo
+        MYSQL_USER: root
+        MYSQL_PASWORD: senha123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-data:/var/lib/mysql
+    restart: always

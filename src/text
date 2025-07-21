@@ -1,0 +1,155 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema efetivo
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema efetivo
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `efetivo` DEFAULT CHARACTER SET utf8 ;
+USE `efetivo` ;
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`responsavel`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`responsavel` (
+  `resp_id` INT NOT NULL AUTO_INCREMENT,
+  `resp_responsavel` VARCHAR(45) NULL,
+  PRIMARY KEY (`resp_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`empresa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`empresa` (
+  `empr_id` INT NOT NULL AUTO_INCREMENT,
+  `empr_empresa` VARCHAR(45) NULL,
+  `empr_cnpj` VARCHAR(45) NULL,
+  PRIMARY KEY (`empr_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`endereco`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`endereco` (
+  `ende_id` INT NOT NULL AUTO_INCREMENT,
+  `ende_endereco` VARCHAR(45) NULL,
+  PRIMARY KEY (`ende_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`setor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`setor` (
+  `seto_id` INT NOT NULL AUTO_INCREMENT,
+  `seto_setor` VARCHAR(45) NULL,
+  PRIMARY KEY (`seto_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`cargo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`cargo` (
+  `carg_id` INT NOT NULL AUTO_INCREMENT,
+  `carg_cargo` VARCHAR(45) NULL,
+  PRIMARY KEY (`carg_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`status` (
+  `stat_id` INT NOT NULL AUTO_INCREMENT,
+  `stat_status` VARCHAR(45) NULL,
+  PRIMARY KEY (`stat_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`bairro`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`bairro` (
+  `bair_id` INT NOT NULL AUTO_INCREMENT,
+  `bair_bairro` VARCHAR(45) NULL,
+  PRIMARY KEY (`bair_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `efetivo`.`funcionario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `efetivo`.`funcionario` (
+  `func_id` INT NOT NULL AUTO_INCREMENT,
+  `func_nome` VARCHAR(45) NULL,
+  `func_email` VARCHAR(45) NULL,
+  `func_rg` INT NULL,
+  `func_cpf` BIGINT(11) NULL,
+  `func_telefone` INT NULL,
+  `data_admissao` DATE NULL,
+  `data_desligamento` DATE NULL,
+  `responsavel_resp_id` INT NOT NULL,
+  `empresa_empr_id` INT NOT NULL,
+  `endereco_ende_id` INT NOT NULL,
+  `setor_seto_id` INT NOT NULL,
+  `cargo_carg_id` INT NOT NULL,
+  `status_stat_id` INT NOT NULL,
+  `bairro_bair_id` INT NOT NULL,
+  PRIMARY KEY (`func_id`, `responsavel_resp_id`, `empresa_empr_id`, `endereco_ende_id`, `setor_seto_id`, `cargo_carg_id`, `status_stat_id`, `bairro_bair_id`),
+  INDEX `fk_funcionario_responsavel_idx` (`responsavel_resp_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_empresa1_idx` (`empresa_empr_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_endereco1_idx` (`endereco_ende_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_setor1_idx` (`setor_seto_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_cargo1_idx` (`cargo_carg_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_status1_idx` (`status_stat_id` ASC) VISIBLE,
+  INDEX `fk_funcionario_bairro1_idx` (`bairro_bair_id` ASC) VISIBLE,
+  CONSTRAINT `fk_funcionario_responsavel`
+    FOREIGN KEY (`responsavel_resp_id`)
+    REFERENCES `efetivo`.`responsavel` (`resp_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_empresa1`
+    FOREIGN KEY (`empresa_empr_id`)
+    REFERENCES `efetivo`.`empresa` (`empr_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_endereco1`
+    FOREIGN KEY (`endereco_ende_id`)
+    REFERENCES `efetivo`.`endereco` (`ende_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_setor1`
+    FOREIGN KEY (`setor_seto_id`)
+    REFERENCES `efetivo`.`setor` (`seto_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_cargo1`
+    FOREIGN KEY (`cargo_carg_id`)
+    REFERENCES `efetivo`.`cargo` (`carg_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_status1`
+    FOREIGN KEY (`status_stat_id`)
+    REFERENCES `efetivo`.`status` (`stat_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_bairro1`
+    FOREIGN KEY (`bairro_bair_id`)
+    REFERENCES `efetivo`.`bairro` (`bair_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

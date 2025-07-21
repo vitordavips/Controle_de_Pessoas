@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model bairro {
+  bair_id     Int           @id @default(autoincrement())
+  bair_bairro String?       @db.VarChar(45)
+  funcionario funcionario[]
+}
+
+model cargo {
+  carg_id     Int           @id @default(autoincrement())
+  carg_cargo  String?       @db.VarChar(45)
+  funcionario funcionario[]
+}
+
+model empresa {
+  empr_id      Int           @id @default(autoincrement())
+  empr_empresa String?       @db.VarChar(45)
+  empr_cnpj    String?       @db.VarChar(45)
+  funcionario  funcionario[]
+}
+
+model endereco {
+  ende_id       Int           @id @default(autoincrement())
+  ende_endereco String?       @db.VarChar(45)
+  funcionario   funcionario[]
+}
+
+model funcionario {
+  func_id             Int         @default(autoincrement())
+  func_nome           String?     @db.VarChar(45)
+  func_email          String?     @db.VarChar(45)
+  func_rg             Int?
+  func_cpf            BigInt?
+  func_telefone       Int?
+  data_admissao       DateTime?   @db.Date
+  data_desligamento   DateTime?   @db.Date
+  responsavel_resp_id Int
+  empresa_empr_id     Int
+  endereco_ende_id    Int
+  setor_seto_id       Int
+  cargo_carg_id       Int
+  status_stat_id      Int
+  bairro_bair_id      Int
+  bairro              bairro      @relation(fields: [bairro_bair_id], references: [bair_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_bairro1")
+  cargo               cargo       @relation(fields: [cargo_carg_id], references: [carg_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_cargo1")
+  empresa             empresa     @relation(fields: [empresa_empr_id], references: [empr_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_empresa1")
+  endereco            endereco    @relation(fields: [endereco_ende_id], references: [ende_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_endereco1")
+  responsavel         responsavel @relation(fields: [responsavel_resp_id], references: [resp_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_responsavel")
+  setor               setor       @relation(fields: [setor_seto_id], references: [seto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_setor1")
+  status              status      @relation(fields: [status_stat_id], references: [stat_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_funcionario_status1")
+
+  @@id([func_id, responsavel_resp_id, empresa_empr_id, endereco_ende_id, setor_seto_id, cargo_carg_id, status_stat_id, bairro_bair_id])
+  @@index([bairro_bair_id], map: "fk_funcionario_bairro1_idx")
+  @@index([cargo_carg_id], map: "fk_funcionario_cargo1_idx")
+  @@index([empresa_empr_id], map: "fk_funcionario_empresa1_idx")
+  @@index([endereco_ende_id], map: "fk_funcionario_endereco1_idx")
+  @@index([responsavel_resp_id], map: "fk_funcionario_responsavel_idx")
+  @@index([setor_seto_id], map: "fk_funcionario_setor1_idx")
+  @@index([status_stat_id], map: "fk_funcionario_status1_idx")
+}
+
+model responsavel {
+  resp_id          Int           @id @default(autoincrement())
+  resp_responsavel String?       @db.VarChar(45)
+  funcionario      funcionario[]
+}
+
+model setor {
+  seto_id     Int           @id @default(autoincrement())
+  seto_setor  String?       @db.VarChar(45)
+  funcionario funcionario[]
+}
+
+model status {
+  stat_id     Int           @id @default(autoincrement())
+  stat_status String?       @db.VarChar(45)
+  funcionario funcionario[]
+}
+
+model users {
+  id    Int    @id @default(autoincrement())
+  nome  String @db.VarChar(40)
+  email String @db.VarChar(40)
+  senha String @db.VarChar(40)
+}
