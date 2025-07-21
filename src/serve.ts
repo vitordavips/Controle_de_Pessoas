@@ -1,6 +1,9 @@
 import fastify from "fastify";
+import { userRoutes } from "./routes/userRoutes";
 
 const app = fastify();
+
+app.register(userRoutes);
 
 //teste api
 app.get('/', ()=>{
