@@ -1,31 +1,59 @@
 import { prisma } from "../lib/prisma-client";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ICreateUser, ILoginUser } from "../interfaces/user-interface";
+import * as bcrypt from 'bcrypt';
 
 // criar usuário
-export async function CreateUser(request: FastifyRequest, reply: FastifyReply) {
+export async function createUser(request: FastifyRequest, reply: FastifyReply) {
     const {nome, email, senha} = request.body as ICreateUser;
 
     try {
-        const existiuser = await prisma.user.findUnique({where: {email}});
+
+        //verificar se o usuario existe
+        const existiuser = await prisma.users.findUnique({where:{email:email}});
+
         if(existiuser){
             return reply.status(401).send({message:"e-mail já cadastro"});
-        }
+        };
 
-        const user = await prisma.user.Create({
-            data: {nome, email, senha}
-        })
+        //criptografia
+        const hashSenha = await bcrypt.hash(senha, 10);
+
+        const user = await prisma.users.create({
+            data: {
+                nome, 
+                email, 
+                senha: hashSenha
+            }
+        });
 
         return reply.status(200).send({
             id: user.id,
             nome: user.nome,
-            email: user.email
+            email: user.email,
+            senha: user.senha
         })
     } catch (error) {
         return reply.status(500).send({error: "Erro ao cadastrar o usuário"})
     }
+};
+
+// login
+export async function loginUser(request: FastifyRequest, reply: FastifyReply) {
+    const {email, senha} = request.body as ILoginUser;
+
+    try {
+        const user = await prisma.users.findUnique({where:{email: email}});
+
+        if(user){
+            return reply.status(401).send({message:"email já cadastrado"})
+        }
+
+        const senhaValidade = await 
+
+    } catch (error) {
+        
+    }
 }
-
-
 
 

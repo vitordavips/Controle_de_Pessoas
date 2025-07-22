@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
+
 
 datasource db {
   provider = "mysql"
@@ -88,6 +88,6 @@ model status {
 model users {
   id    Int    @id @default(autoincrement())
   nome  String @db.VarChar(40)
-  email String @db.VarChar(40)
+  email String @unique @db.VarChar(40)
   senha String @db.VarChar(40)
 }
