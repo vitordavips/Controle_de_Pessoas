@@ -3,12 +3,11 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { ICreateUser, ILoginUser } from "../interfaces/user-interface";
 import * as bcrypt from 'bcrypt';
 
-// criar usuário
-export async function createUser(request: FastifyRequest, reply: FastifyReply) {
+// criar cadastro
+export async function cadastroUser(request: FastifyRequest, reply: FastifyReply) {
     const {nome, email, senha} = request.body as ICreateUser;
 
     try {
-
         //verificar se o usuario existe
         const existiuser = await prisma.users.findUnique({where:{email:email}});
 
@@ -45,15 +44,20 @@ export async function loginUser(request: FastifyRequest, reply: FastifyReply) {
     try {
         const user = await prisma.users.findUnique({where:{email: email}});
 
-        if(user){
-            return reply.status(401).send({message:"email já cadastrado"})
-        }
+        if(!user){
+            return reply.status(401).send({message:"email ou senha inválidos"})
+        };
 
-        const senhaValidade = await 
+        const senhaValidade = await bcrypt.compare(senha, user.senha)
+        if(!senhaValidade){
+            return reply.status(401).send({message:"email ou senha inválidos"})
+        };
 
+        return reply.status(200).send({message: "Login realizado com sucesso!", user});
     } catch (error) {
-        
-    }
-}
+        console.error("Erro no Login:", error);
+        return reply.status(500).send({message: "Erro interno"})
+    };
+};
 
 
