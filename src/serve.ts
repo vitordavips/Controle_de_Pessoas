@@ -14,4 +14,4 @@ app.get('/', ()=>{
 // servidor
 app.listen({ port:3000 }).then(() => {
     console.log("servidor rodando!")
-})
+});
