@@ -16,7 +16,7 @@ export function generateToken(userId:number):string {
     return token;
 };
 // criar cadastro
-export async function cadastroUser(request: FastifyRequest<{Body: ICreateUser}>, reply: FastifyReply) {
+export async function cadastroUser(request: FastifyRequest, reply: FastifyReply) {
     const {nome, email, senha} = request.body as ICreateUser;
 
     try{
@@ -54,7 +54,7 @@ export async function cadastroUser(request: FastifyRequest<{Body: ICreateUser}>,
 };
 
 // login
-export async function loginUser(request: FastifyRequest<{Body: ILoginUser}>, reply: FastifyReply) {
+export async function loginUser(request: FastifyRequest, reply: FastifyReply) {
     const {email, senha} = request.body as ILoginUser;
 
     try {
