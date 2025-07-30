@@ -86,4 +86,3 @@ export async function loginUser(request: FastifyRequest, reply: FastifyReply) {
     };
 };
 
-
